@@ -38,11 +38,11 @@ class TreeViewCheckBox(CompositeWidget, MultiSelect):
 
         TreeViewCheckBox.box_size = max([len(word) for word in self.select_options]+ [len(self.select_all), TreeViewCheckBox.box_size]) * 10
         
-        self.all_selector = Checkbox(name=self.select_all)
+        self.all_selector = Checkbox(name=self.select_all, value=True)
         self.all_selector.param.watch(self._update_all, 'value')
 
         self.selected_options = CheckBoxGroup(
-            name='Checkbox Group', value=[], options=self.select_options,
+            name='Checkbox Group', value=self.select_options, options=self.select_options,
         )
         self.selected_options.param.watch(self._update_selected_options, 'value')
 
@@ -66,15 +66,15 @@ class TreeViewCheckBox(CompositeWidget, MultiSelect):
     def _update_all(self, event):
         if self.all_selector.value:
             self.selected_options.value = self.select_options
-            self.value = [self.all_selector.name] + self.select_options
         else:
             if len(self.select_options[:-1]) != len(self.selected_options.value):
                 self.selected_options.value = []
-                self.value = []
     
     def _update_selected_options(self, event):
         if len(self.select_options) == len(self.selected_options.value):
-            self.all_selector.value = True
+            # This will trigger an update don't trigger if it's already true
+            if not self.all_selector.value:
+                self.all_selector.value = True
         else:
             self.all_selector.value = False
         self.value = self.selected_options.value
