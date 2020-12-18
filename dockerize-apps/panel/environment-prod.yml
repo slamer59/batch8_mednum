@@ -34,5 +34,3 @@ dependencies:
   - tqdm=4.50.0
   - nodejs>=10.13.0
   - pygal
-  #- pip:
-  #  - "git+https://github.com/slamer59/panel.git#egg=panel"
